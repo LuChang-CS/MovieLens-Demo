@@ -33,15 +33,17 @@ class PreProcessData:
         movies_header = movies_csv.__next__()
         links_header = links_csv.__next__()
         movies_out_writer.writerow(movies_header[0:2] + links_header[1:])
-        genres_out_writer.writerow(movies_header[0:1] + movies_header[2:3])
+        genres_out_writer.writerow(['id'] + movies_header[0:1] + movies_header[2:3])
 
+        id_ = 1
         for link_items, movie_items in zip(links_csv, movies_csv):
 
             movies_out_writer.writerow(movie_items[0:2] + link_items[1:])
 
             movie_id = movie_items[0:1]
             for genre in movie_items[2].split('|'):
-                genres_out_writer.writerow(movie_id + [genre])
+                genres_out_writer.writerow([id_] + movie_id + [genre])
+                id_ += 1
 
     def handle_ratings(self, ratings_out='ratings_new.csv'):
         self._handle_ids(self.ratings_path, self.movielens_path + ratings_out)
