@@ -111,6 +111,11 @@ class PreProcessData:
 if __name__ == '__main__':
     ml_path = sys.argv[1]
     pre_process_data = PreProcessData(ml_path)
+
+    pre_process_data.handle_movies_links()
+    pre_process_data.handle_ratings()
+    pre_process_data.handle_tags()
+
     pre_process_data.movies_to_json()
     pre_process_data.genres_to_json()
     pre_process_data.ratings_to_json()
