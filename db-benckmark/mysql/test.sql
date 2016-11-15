@@ -7,8 +7,8 @@ select * from tags;
 -- where
 select * from ratings where rating > 2;
 select * from genres where genres = 'Action';
-select * from ratings where timestamp > 1000000000 and rating > 3.5
-select * from genres where genres = 'Adventure' or genres = 'Sci-Fi'
+select * from ratings where timestamp > 1000000000 and rating > 3.5;
+select * from genres where genres = 'Adventure' or genres = 'Sci-Fi';
 
 -- aggregation function
 select max(rating) from ratings;
@@ -37,8 +37,9 @@ select rating
 
 select title, rating 
     from ratings join movies 
-    on ratings.movieId = movies.movieId join genres 
-    on ratings.movieId =genres.movieId 
+    on ratings.movieId = movies.movieId 
+    join genres 
+    on ratings.movieId = genres.movieId 
     where genres = 'Documentary';
 
 -- subquery

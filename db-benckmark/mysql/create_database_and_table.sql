@@ -1,18 +1,19 @@
 /**
  * create database and table in mysql
- * usage: mysql -uUser -pPassword < sql_path
+ * usage: copy to mysql client and run
+ *     or mysql -uUser -pPassword < sql_path
  *     or 1. mysql -uUser -pPassword
  *        2. mysql> source sql_path
  */
 
-create database if not exists MovieLens;
+create database if not exists MovieLens
+
+use MovieLens;
 
 drop table if exists movies;
 drop table if exists genres;
 drop table if exists ratings;
 drop table if exists tags;
-
-use MovieLens;
 
 create table movies (
     movieId int not null auto_increment,

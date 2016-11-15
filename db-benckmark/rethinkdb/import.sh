@@ -11,22 +11,22 @@ db="MovieLens"
 
 # movies table name and movies filename
 movies_table="movies"
-movies_filename="${movies_table}.csv"
+movies_filename="${movies_table}.json"
 movies_pkey="movieId"
 
 # genres table name and genres filename
 genres_table="genres"
-genres_filename="${genres_table}.csv"
+genres_filename="${genres_table}.json"
 genres_pkey="id"
 
 # ratings table name and ratings filename
 ratings_table="ratings"
-ratings_filename="${ratings_table}.csv"
+ratings_filename="${ratings_table}.json"
 ratings_pkey="id"
 
 # tags table and tags filename
 tags_table="tags"
-tages_filename="${tags_table}.csv"
+tages_filename="${tags_table}.json"
 tags_pkey="id"
 
 
