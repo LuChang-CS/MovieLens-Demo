@@ -5,15 +5,20 @@
  *        2. mysql> source sql_path
  */
 
-create database MovieLens;
+create database if not exists MovieLens;
+
+drop table if exists movies;
+drop table if exists genres;
+drop table if exists ratings;
+drop table if exists tags;
 
 use MovieLens;
 
 create table movies (
     movieId int not null auto_increment,
     title varchar(200) not null,
-    imdbId char(7) not null,
-    tmdbId int not null,
+    imdbId char(7),
+    tmdbId int,
     primary key(movieId)
 );
 

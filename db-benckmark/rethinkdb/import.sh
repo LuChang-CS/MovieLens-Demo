@@ -30,7 +30,7 @@ tages_filename="${tags_table}.csv"
 tags_pkey="id"
 
 
-rethinkdb import -f ${movies_filename}  --format csv --table ${db}.${movies_table}  --pkey ${movies_pkey}
-rethinkdb import -f ${genres_filename}  --format csv --table ${db}.${genres_table}  --pkey ${genres_pkey}
-rethinkdb import -f ${ratings_filename} --format csv --table ${db}.${ratings_table} --pkey ${ratings_pkey}
-rethinkdb import -f ${tages_filename}   --format csv --table ${db}.${tags_table}    --pkey ${tags_pkey}
+rethinkdb import -f ${movies_filename}  --table ${db}.${movies_table}  --pkey ${movies_pkey}
+rethinkdb import -f ${genres_filename}  --table ${db}.${genres_table}  --pkey ${genres_pkey}
+rethinkdb import -f ${ratings_filename} --table ${db}.${ratings_table} --pkey ${ratings_pkey}
+rethinkdb import -f ${tages_filename}   --table ${db}.${tags_table}    --pkey ${tags_pkey}
