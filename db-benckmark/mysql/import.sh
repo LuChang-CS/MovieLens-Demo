@@ -31,7 +31,16 @@ tages_filename="${movielens_path}/${tags_table}.csv"
 user="root"
 password="root"
 
-mysqlimport --local --fields-optionally-enclosed-by='\"' --fields-terminated-by=',' --lines-terminated-by='\n' --ignore-lines=1 --user=${user} --password=${password} ${db} $movies_filename
-mysqlimport --local --fields-optionally-enclosed-by='\"' --fields-terminated-by=',' --lines-terminated-by='\n' --ignore-lines=1 --user=${user} --password=${password} ${db} $genres_filename
-mysqlimport --local --fields-optionally-enclosed-by='\"' --fields-terminated-by=',' --lines-terminated-by='\n' --ignore-lines=1 --user=${user} --password=${password} ${db} $ratings_filename
-mysqlimport --local --fields-optionally-enclosed-by='\"' --fields-terminated-by=',' --lines-terminated-by='\n' --ignore-lines=1 --user=${user} --password=${password} ${db} $tages_filename
+mysqlimport \
+    --local \
+    --fields-optionally-enclosed-by='\"' \
+    --fields-terminated-by=',' \
+    --lines-terminated-by='\n' \
+    --ignore-lines=1 \
+    --user=${user} \
+    --password=${password} \
+    ${db} \
+    $movies_filename \
+    $genres_filename \
+    $ratings_filename \
+    $tages_filename
