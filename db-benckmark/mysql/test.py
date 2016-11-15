@@ -73,9 +73,9 @@ class MySQLTest:
         return self._test_select([sql1, sql2, sql3], repeat_times)
 
     def test_subquery(self, repeat_times):
-        sql1 = 'select user, ratings.movie, rating \
-            from ratings join ((select movie, max(rating) as r from ratings group by movie) as RR) \
-            on ratings.movie = RR.movie and ratings.rating = RR.r;'
+        sql1 = 'select userId, ratings.movieId, rating \
+            from ratings join ((select movieId, max(rating) as r from ratings group by movieId) as RR) \
+            on ratings.movieId = RR.movieId and ratings.rating = RR.r;'
 
         return self._test_select([sql1], repeat_times)
 
