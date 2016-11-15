@@ -34,7 +34,7 @@ create table ratings (
     id int not null auto_increment,
     userId int not null,
     movieId int not null,
-    ratings float not null,
+    rating float not null,
     timestamp bigint not null,
     primary key(id)
 );
