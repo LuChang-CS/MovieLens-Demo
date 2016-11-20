@@ -111,7 +111,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print('Usage: preprocess_data.py ml_path out_path')
     ml_path = sys.argv[1]
-    out_path = sys.agrv[2]
+    out_path = sys.argv[2]
     pre_process_data = PreProcessData(ml_path, out_path)
 
     pre_process_data.handle_movies_links()
