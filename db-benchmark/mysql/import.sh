@@ -5,8 +5,13 @@
 # execute './import.sh' in commandline
 # note the executable priviledge of this shell
 
+if [[ $# != 1 ]]; then
+    echo "Usage: ./import.sh ml-path"
+    exit
+fi
+
 # MovieLens csv path
-movielens_path="~/Downloads/movielens/ml-20m"
+movielens_path=$1
 
 # database name
 db="MovieLens"
