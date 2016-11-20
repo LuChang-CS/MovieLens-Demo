@@ -199,6 +199,10 @@ if __name__ == '__main__':
     repeat_t = 2
     update_t = 10
 
+    print('testing create index')
+    update_time_without_index = dict()
+    update_time_without_index['create index'] = rt.test_create_index()
+
     print('testing select with index')
     select_time_with_index = dict()
     select_time_with_index['select'] = rt.test_select(repeat_times=repeat_t)
