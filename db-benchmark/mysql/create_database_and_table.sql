@@ -6,7 +6,7 @@
  *        2. mysql> source sql_path
  */
 
-create database if not exists MovieLens
+create database if not exists MovieLens;
 
 use MovieLens;
 
