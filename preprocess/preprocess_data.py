@@ -14,9 +14,12 @@ class PreProcessData:
 
     TAGS = 'tags.csv'
 
-    def __init__(self, movielens_path):
+    def __init__(self, movielens_path, out_path):
         if not movielens_path.endswith(os.sep):
             movielens_path += os.sep
+
+        if not out_path.endswith(os.sep):
+            out_path += os.sep
 
         self.movielens_path = movielens_path
         self.links_path = movielens_path + PreProcessData.LINKS
@@ -24,15 +27,13 @@ class PreProcessData:
         self.ratings_path = movielens_path + PreProcessData.RATINGS
         self.tags_path = movielens_path + PreProcessData.TAGS
 
-        self.movies_new_path = movielens_path + 'movies_new.csv'
-        self.genres_new_path = movielens_path + 'genres.csv'
-        self.ratings_new_path = movielens_path + 'ratings_new.csv'
-        self.tags_new_path = movielens_path + 'tags_new.csv'
+        self.out_path = out_path
+        self.movies_new_path = out_path + 'movies.csv'
+        self.genres_new_path = out_path + 'genres.csv'
+        self.ratings_new_path = out_path + 'ratings.csv'
+        self.tags_new_path = out_path + 'tags.csv'
 
-    def handle_movies_links(self, movies_out='movies_new.csv', genres_out='genres.csv'):
-        self.movies_new_path = self.movielens_path + movies_out
-        self.genres_new_path = self.movielens_path + genres_out
-
+    def handle_movies_links(self):
         movies_out_writer = csv.writer(open(self.movies_new_path, 'w', newline='', encoding='UTF-8'))
         genres_out_writer = csv.writer(open(self.genres_new_path, 'w', newline='', encoding='UTF-8'))
 
@@ -54,13 +55,11 @@ class PreProcessData:
                 genres_out_writer.writerow([id_] + movie_id + [genre])
                 id_ += 1
 
-    def handle_ratings(self, ratings_out='ratings_new.csv'):
-        self.ratings_new_path = self.movielens_path + ratings_out
+    def handle_ratings(self):
         self._handle_ids(self.ratings_path, self.ratings_new_path)
 
-    def handle_tags(self, tags_out='tags_new.csv'):
-        self.tags_new_path = self.movielens_path + tags_out
-        self._handle_ids(self.tags_path, self.movielens_path + tags_out)
+    def handle_tags(self):
+        self._handle_ids(self.tags_path, self.tags_new_path)
 
     def _handle_ids(self, in_path, out_path):
         f = open(in_path, encoding='UTF-8')
@@ -78,16 +77,16 @@ class PreProcessData:
         o.close()
 
     def movies_to_json(self, movies_out='movies.json'):
-        self._csv_to_json(self.movies_new_path, self.movielens_path + movies_out, [int, str, str, int])
+        self._csv_to_json(self.movies_new_path, self.out_path + movies_out, [int, str, str, int])
 
     def genres_to_json(self, genres_out='genres.json'):
-        self._csv_to_json(self.genres_new_path, self.movielens_path + genres_out, [int, int, str])
+        self._csv_to_json(self.genres_new_path, self.out_path + genres_out, [int, int, str])
 
     def ratings_to_json(self, ratings_out='ratings.json'):
-        self._csv_to_json(self.ratings_new_path, self.movielens_path + ratings_out, [int, int, int, float, int])
+        self._csv_to_json(self.ratings_new_path, self.out_path + ratings_out, [int, int, int, float, int])
 
     def tags_to_json(self, tags_out='tags.json'):
-        self._csv_to_json(self.tags_new_path, self.movielens_path + tags_out, [int, int, int, str, int])
+        self._csv_to_json(self.tags_new_path, self.out_path + tags_out, [int, int, int, str, int])
 
     def _csv_to_json(self, in_path, out_path, type_list, line_cache=1):
         f_csv = csv.reader(open(in_path, encoding='UTF-8'))
@@ -109,8 +108,11 @@ class PreProcessData:
 
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print('Usage: preprocess_data.py ml_path out_path')
     ml_path = sys.argv[1]
-    pre_process_data = PreProcessData(ml_path)
+    out_path = sys.agrv[2]
+    pre_process_data = PreProcessData(ml_path, out_path)
 
     pre_process_data.handle_movies_links()
     pre_process_data.handle_ratings()

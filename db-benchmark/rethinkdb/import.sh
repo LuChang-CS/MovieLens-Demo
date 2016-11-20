@@ -2,7 +2,7 @@
 #
 # file: import.sh
 # 
-# change to directory movielens csv files stored
+# change to directory movielens json files stored
 # and execute './import.sh' in commandline
 # note the executable priviledge of this shell
 
