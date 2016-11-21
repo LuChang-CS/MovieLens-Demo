@@ -49,3 +49,4 @@ mysqlimport \
     $genres_filename \
     $ratings_filename \
     $tages_filename
+
