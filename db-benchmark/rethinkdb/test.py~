@@ -52,8 +52,8 @@ class RethinkDBTest:
         return self._test_select_time_cost(reqls, time_costs, repeat_times)
 
     def test_group_by(self, repeat_times=1, limit=10000):
-        reql1 = r.table('ratings').group('userId', index='userId')
-        reql2 = r.table('genres').group('movieId', index='movieId')
+        reql1 = r.table('ratings').group('userId', index='userId').max('rating')
+        reql2 = r.table('genres').group('movieId', index='movieId').count('genres')
 
         reqls = [reql1, reql2]
         time_costs = self._test_select(reqls, repeat_times)
@@ -205,10 +205,14 @@ class RethinkDBTest:
 
 if __name__ == '__main__':
     rt = RethinkDBTest('10.132.141.101')
-    repeat_t = 1
+    repeat_t = 5
     update_t = 10000
     limit = 10000
 
-    print('    testing group')
-    print(rt.test_group_by(repeat_times=repeat_t, limit=limit))
+    print('    testing where')
+    print(rt.test_where(repeat_times=repeat_t, limit=limit))
+
+    import json
+
+    json.dump(time_cost_info, info, indent=4)
     info.close()

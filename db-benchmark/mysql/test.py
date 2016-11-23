@@ -18,29 +18,29 @@ class MySQLTest:
     def __del__(self):
         self.conn.close()
 
-    def test_select(self, repeat_times=1):
-        sql1 = 'select * from movies;'
-        sql2 = 'select * from genres;'
-        sql3 = 'select * from ratings;'
-        sql4 = 'select * from tags;'
+    def test_select(self, repeat_times=1, limit=10000):
+        sql1 = 'select * from movies limit %d;' % limit
+        sql2 = 'select * from genres limit %d;' % limit
+        sql3 = 'select * from ratings limit %d;' % limit
+        sql4 = 'select * from tags limit %d;' % limit
 
         sqls = [sql1, sql2, sql3, sql4]
         time_costs = self._test_select(sqls, repeat_times)
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_where(self, repeat_times=1):
-        sql1 = 'select * from ratings where rating > 2;'
-        sql2 = 'select * from genres where genres = \'Action\';'
-        sql3 = 'select * from ratings where timestamp > 1000000000 and rating > 3.5;'
-        sql4 = 'select * from genres where genres = \'Adventure\' or genres = \'Sci-Fi\';'
+    def test_where(self, repeat_times=1, limit=10000):
+        sql1 = 'select * from ratings where rating > 2 limit %d;' % limit
+        sql2 = 'select * from genres where genres = \'Documentary\' limit %d;' % limit
+        sql3 = 'select * from ratings where timestamp > 1000000000 and rating > 3.5 limit %d;' % limit
+        sql4 = 'select * from genres where genres = \'Adventure\' or genres = \'Sci-Fi\' limit %d;' % limit
 
         sqls = [sql1, sql2, sql3, sql4]
         time_costs = self._test_select(sqls, repeat_times)
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_aggregation(self, repeat_times=1):
+    def test_aggregation(self, repeat_times=1, limit=10000):
         sql1 = 'select max(rating) from ratings;'
         sql2 = 'select count(rating) from ratings;'
         sql3 = 'select distinct(userId) from ratings;'
@@ -51,49 +51,49 @@ class MySQLTest:
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_group_by(self, repeat_times=1):
-        sql1 = 'select userId, max(rating) from ratings group by userId;'
-        sql2 = 'select movieId, count(genres) from genres group by movieId;'
+    def test_group_by(self, repeat_times=1, limit=10000):
+        sql1 = 'select userId, max(rating) from ratings group by userId limit %d;' % limit
+        sql2 = 'select movieId, count(genres) from genres group by movieId limit %d;' % limit
 
         sqls = [sql1, sql2]
         time_costs = self._test_select(sqls, repeat_times)
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_order_by(self, repeat_times=1):
-        sql1 = 'select * from ratings order by rating;'
-        sql2 = 'select * from ratings order by rating, movieId;'
-        sql3 = 'select avg(rating) as avg_rating from ratings group by movieId order by avg_rating DESC;'
+    def test_order_by(self, repeat_times=1, limit=10000):
+        sql1 = 'select * from ratings order by rating limit %d;' % limit
+        sql2 = 'select * from ratings order by rating, movieId limit %d;' % limit
+        sql3 = 'select avg(rating) as avg_rating from ratings group by movieId order by avg_rating DESC limit %d;' % limit
 
         sqls = [sql1, sql2, sql3]
         time_costs = self._test_select(sqls, repeat_times)
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_join(self, repeat_times=1):
+    def test_join(self, repeat_times=1, limit=10000):
         sql1 = 'select title, rating \
             from ratings join movies \
-            on ratings.movieId = movies.movieId;'
+            on ratings.movieId = movies.movieId limit %d;' % limit
         sql2 = 'select rating \
             from ratings join genres \
             on ratings.movieId = genres.movieId \
-            where genres = \'Documentary\';'
+            where genres = \'Documentary\' limit %d;' % limit
         sql3 = 'select title, rating \
             from ratings join movies \
             on ratings.movieId = movies.movieId \
             join genres \
             on ratings.movieId = genres.movieId \
-            where genres = \'Documentary\';'
+            where genres = \'Documentary\' limit %d;' % limit
 
         sqls = [sql1, sql2, sql3]
         time_costs = self._test_select(sqls, repeat_times)
 
         return self._test_select_time_cost(sqls, time_costs, repeat_times)
 
-    def test_subquery(self, repeat_times=1):
+    def test_subquery(self, repeat_times=1, limit=10000):
         sql1 = 'select userId, ratings.movieId, rating \
             from ratings join ((select movieId, max(rating) as r from ratings group by movieId) as RR) \
-            on ratings.movieId = RR.movieId and ratings.rating = RR.r;'
+            on ratings.movieId = RR.movieId and ratings.rating = RR.r limit %d;' % limit
 
         sqls = [sql1]
         time_costs = self._test_select(sqls, repeat_times)
@@ -220,51 +220,72 @@ class MySQLTest:
 
 if __name__ == '__main__':
     mst = MySQLTest(database='MovieLens')
-    repeat_t = 2
-    update_t = 10
+    repeat_t = 5
+    update_t = 10000
+    limit = 10000
 
-    print('testing select without index')
-    select_time_without_index = dict()
-    select_time_without_index['select'] = mst.test_select(repeat_times=repeat_t)
-    select_time_without_index['where'] = mst.test_where(repeat_times=repeat_t)
-    select_time_without_index['aggregation'] = mst.test_aggregation(repeat_times=repeat_t)
-    select_time_without_index['group by'] = mst.test_group_by(repeat_times=repeat_t)
-    select_time_without_index['order by'] = mst.test_order_by(repeat_times=repeat_t)
-    select_time_without_index['join'] = mst.test_join(repeat_times=repeat_t)
-    select_time_without_index['subquery'] = mst.test_subquery(repeat_times=repeat_t)
+#    print('testing select without index')
+#    select_time_without_index = dict()
+#    print('    testing select')
+#    select_time_without_index['select'] = mst.test_select(repeat_times=repeat_t)
+#    print('    testing where')
+#    select_time_without_index['where'] = mst.test_where(repeat_times=repeat_t)
+#    print('    testing aggregation')
+#    select_time_without_index['aggregation'] = mst.test_aggregation(repeat_times=repeat_t)
+#    print('    testing group by')
+#    select_time_without_index['group by'] = mst.test_group_by(repeat_times=repeat_t)
+#    print('    testing order by')
+#    select_time_without_index['order by'] = mst.test_order_by(repeat_times=repeat_t)
+#    print('    testing join')
+#    select_time_without_index['join'] = mst.test_join(repeat_times=repeat_t)
+#    print('    testing subquery')
+#    select_time_without_index['subquery'] = mst.test_subquery(repeat_times=repeat_t)
 
-    print('testing update without index')
-    update_time_without_index = dict()
-    update_time_without_index['insert'] = mst.test_insert(update_times=update_t)
-    update_time_without_index['delete'] = mst.test_delete(update_times=update_t)
-    update_time_without_index['update'] = mst.test_update(update_times=update_t)
-    update_time_without_index['create index'] = mst.test_create_index()
+#    print('testing update without index')
+#    update_time_without_index = dict()
+#    print('    testing insert')
+#    update_time_without_index['insert'] = mst.test_insert(update_times=update_t)
+#    print('    testing delete')
+#    update_time_without_index['delete'] = mst.test_delete(update_times=update_t)
+#    print('testing update')
+#    update_time_without_index['update'] = mst.test_update(update_times=update_t)
+#    print('testing create index')
+#    update_time_without_index['create index'] = mst.test_create_index()
 
     print('testing select with index')
     select_time_with_index = dict()
-    select_time_with_index['select'] = mst.test_select(repeat_times=repeat_t)
-    select_time_with_index['where'] = mst.test_where(repeat_times=repeat_t)
-    select_time_with_index['aggregation'] = mst.test_aggregation(repeat_times=repeat_t)
-    select_time_with_index['group by'] = mst.test_group_by(repeat_times=repeat_t)
-    select_time_with_index['order by'] = mst.test_order_by(repeat_times=repeat_t)
-    select_time_with_index['join'] = mst.test_join(repeat_times=repeat_t)
-    select_time_with_index['subquery'] = mst.test_subquery(repeat_times=repeat_t)
+    print('    testing select')
+    select_time_with_index['select'] = mst.test_select(repeat_times=repeat_t, limit=limit)
+    print('    testing where')
+    select_time_with_index['where'] = mst.test_where(repeat_times=repeat_t, limit=limit)
+    print('    testing aggregation')
+    select_time_with_index['aggregation'] = mst.test_aggregation(repeat_times=repeat_t, limit=limit)
+    print('    testing group by')
+    select_time_with_index['group by'] = mst.test_group_by(repeat_times=repeat_t, limit=limit)
+    print('    testing order by')
+    select_time_with_index['order by'] = mst.test_order_by(repeat_times=repeat_t, limit=limit)
+    print('    testing join')
+    select_time_with_index['join'] = mst.test_join(repeat_times=repeat_t, limit=limit)
+    print('    testing subquery')
+    select_time_with_index['subquery'] = mst.test_subquery(repeat_times=repeat_t, limit=limit)
 
     print('testing update with index')
     update_time_with_index = dict()
+    print('    testing insert')
     update_time_with_index['insert'] = mst.test_insert(update_times=update_t)
+    print('    testing delete')
     update_time_with_index['delete'] = mst.test_delete(update_times=update_t)
+    print('testing update')
     update_time_with_index['update'] = mst.test_update(update_times=update_t)
 
     time_cost_info = {
-        'select_time_without_index': select_time_without_index,
-        'update_time_without_index': update_time_without_index,
         'select_time_with_index': select_time_with_index,
         'update_time_with_index': update_time_with_index
     }
 
     info = open('info.txt', 'w', encoding='UTF-8')
     info.write('for select: repeat_times = %d\n' % repeat_t)
+    info.write('for select: limit = %d\n' % limit)
     info.write('for update: update_times = %d\n' % update_t)
     info.write('result:\n')
 

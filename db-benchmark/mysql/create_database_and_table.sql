@@ -16,7 +16,7 @@ drop table if exists ratings;
 drop table if exists tags;
 
 create table movies (
-    movieId int not null auto_increment,
+    movieId int not null,
     title varchar(200) not null,
     imdbId char(7),
     tmdbId int,
@@ -24,14 +24,14 @@ create table movies (
 );
 
 create table genres (
-    id int not null auto_increment,
+    id int not null,
     movieId int not null,
-    genres varchar(11) not null,
+    genres varchar(50) not null,
     primary key(id)
 );
 
 create table ratings (
-    id int not null auto_increment,
+    id int not null,
     userId int not null,
     movieId int not null,
     rating float not null,
@@ -40,7 +40,7 @@ create table ratings (
 );
 
 create table tags (
-    id int not null auto_increment,
+    id int not null,
     userId int not null,
     movieId int not null,
     tags varchar(200) not null,

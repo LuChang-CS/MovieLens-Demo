@@ -1,0 +1,141 @@
+for select: repeat_times = 5
+for select: limit = 10000
+for update: update_times = 10000
+result:
+{
+    "update_time_with_index": {
+        "update": {
+            "average_time_cost": 0.0012465932028950192,
+            "total_time_cost": 12.465932028950192
+        },
+        "insert": {
+            "average_time_cost": 0.0002923415577970445,
+            "total_time_cost": 2.923415577970445
+        },
+        "delete": {
+            "average_time_cost": 0.0007397409280994907,
+            "total_time_cost": 7.397409280994907
+        }
+    },
+    "select_time_with_index": {
+        "group by": [
+            {
+                "sql": "select userId, max(rating) from ratings group by userId limit 10000;",
+                "average_time_cost": 6.261649689800106,
+                "total_time_cost": 31.30824844900053
+            },
+            {
+                "sql": "select movieId, count(genres) from genres group by movieId limit 10000;",
+                "average_time_cost": 0.24611871200613678,
+                "total_time_cost": 1.2305935600306839
+            }
+        ],
+        "subquery": [
+            {
+                "sql": "select userId, ratings.movieId, rating             from ratings join ((select movieId, max(rating) as r from ratings group by movieId) as RR)             on ratings.movieId = RR.movieId and ratings.rating = RR.r limit 10000;",
+                "average_time_cost": 81.7800380897941,
+                "total_time_cost": 408.90019044897053
+            }
+        ],
+        "where": [
+            {
+                "sql": "select * from ratings where rating > 2 limit 10000;",
+                "average_time_cost": 0.1783880933886394,
+                "total_time_cost": 0.891940466943197
+            },
+            {
+                "sql": "select * from genres where genres = 'Documentary' limit 10000;",
+                "average_time_cost": 0.05423128199763596,
+                "total_time_cost": 0.2711564099881798
+            },
+            {
+                "sql": "select * from ratings where timestamp > 1000000000 and rating > 3.5 limit 10000;",
+                "average_time_cost": 0.19777853819541633,
+                "total_time_cost": 0.9888926909770817
+            },
+            {
+                "sql": "select * from genres where genres = 'Adventure' or genres = 'Sci-Fi' limit 10000;",
+                "average_time_cost": 0.056303374795243145,
+                "total_time_cost": 0.2815168739762157
+            }
+        ],
+        "select": [
+            {
+                "sql": "select * from movies limit 10000;",
+                "average_time_cost": 0.2019365882035345,
+                "total_time_cost": 1.0096829410176724
+            },
+            {
+                "sql": "select * from genres limit 10000;",
+                "average_time_cost": 0.14491769298911095,
+                "total_time_cost": 0.7245884649455547
+            },
+            {
+                "sql": "select * from ratings limit 10000;",
+                "average_time_cost": 0.21277651521377267,
+                "total_time_cost": 1.0638825760688633
+            },
+            {
+                "sql": "select * from tags limit 10000;",
+                "average_time_cost": 0.20627948180772365,
+                "total_time_cost": 1.0313974090386182
+            }
+        ],
+        "join": [
+            {
+                "sql": "select title, rating             from ratings join movies             on ratings.movieId = movies.movieId limit 10000;",
+                "average_time_cost": 0.16354439621791245,
+                "total_time_cost": 0.8177219810895622
+            },
+            {
+                "sql": "select rating             from ratings join genres             on ratings.movieId = genres.movieId             where genres = 'Documentary' limit 10000;",
+                "average_time_cost": 93.43829763801769,
+                "total_time_cost": 467.1914881900884
+            },
+            {
+                "sql": "select title, rating             from ratings join movies             on ratings.movieId = movies.movieId             join genres             on ratings.movieId = genres.movieId             where genres = 'Documentary' limit 10000;",
+                "average_time_cost": 39.8905263035791,
+                "total_time_cost": 199.4526315178955
+            }
+        ],
+        "aggregation": [
+            {
+                "sql": "select max(rating) from ratings;",
+                "average_time_cost": 1.381639717402868,
+                "total_time_cost": 6.90819858701434
+            },
+            {
+                "sql": "select count(rating) from ratings;",
+                "average_time_cost": 0.00048341599758714435,
+                "total_time_cost": 0.002417079987935722
+            },
+            {
+                "sql": "select distinct(userId) from ratings;",
+                "average_time_cost": 8.348972655599937,
+                "total_time_cost": 41.744863277999684
+            },
+            {
+                "sql": "select count(distinct(userId)) from ratings;",
+                "average_time_cost": 12.516663977992721,
+                "total_time_cost": 62.583319889963605
+            }
+        ],
+        "order by": [
+            {
+                "sql": "select * from ratings order by rating limit 10000;",
+                "average_time_cost": 3.1525313126156105,
+                "total_time_cost": 15.762656563078053
+            },
+            {
+                "sql": "select * from ratings order by rating, movieId limit 10000;",
+                "average_time_cost": 4.218764081201516,
+                "total_time_cost": 21.09382040600758
+            },
+            {
+                "sql": "select avg(rating) as avg_rating from ratings group by movieId order by avg_rating DESC limit 10000;",
+                "average_time_cost": 9.873555370396934,
+                "total_time_cost": 49.36777685198467
+            }
+        ]
+    }
+}

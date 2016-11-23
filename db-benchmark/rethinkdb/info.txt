@@ -1,0 +1,141 @@
+for select: repeat_times = 5
+for select: limit = 10000
+for update: update_times = 10000
+result:
+{
+    "select_time_with_index": {
+        "where": [
+            {
+                "average_time_cost": 11.846575289405882,
+                "total_time_cost": 59.23287644702941,
+                "reql": "r.table('ratings').between(2, r.maxval, index='rating', left_bound='open').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.09329559179022909,
+                "total_time_cost": 0.4664779589511454,
+                "reql": "r.table('genres').get_all('Action', index='genres').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.18370306259021163,
+                "total_time_cost": 0.9185153129510581,
+                "reql": "r.table('ratings').filter(lambda var_1: r.and_((r.row['timestamp'] > r.expr(1000000000)), (r.row['rating'] > r.expr(3.5)))).limit(10000)"
+            },
+            {
+                "average_time_cost": 0.13165800201240926,
+                "total_time_cost": 0.6582900100620463,
+                "reql": "r.table('genres').get_all('Adventure', 'Sci-Fi', index='genres').limit(10000)"
+            }
+        ],
+        "select": [
+            {
+                "average_time_cost": 0.07007576378528028,
+                "total_time_cost": 0.35037881892640144,
+                "reql": "r.table('movies').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.06429213059600443,
+                "total_time_cost": 0.32146065298002213,
+                "reql": "r.table('genres').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.07323759540449828,
+                "total_time_cost": 0.3661879770224914,
+                "reql": "r.table('ratings').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.08222542039584368,
+                "total_time_cost": 0.4111271019792184,
+                "reql": "r.table('tags').limit(10000)"
+            }
+        ],
+        "order by": [
+            {
+                "average_time_cost": 0.21263740621507168,
+                "total_time_cost": 1.0631870310753584,
+                "reql": "r.table('ratings').order_by(index='rating').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.21669867699965834,
+                "total_time_cost": 1.0834933849982917,
+                "reql": "r.table('ratings').order_by(index='rating_and_movieId').limit(10000)"
+            },
+            {
+                "average_time_cost": 217.52389261119532,
+                "total_time_cost": 1087.6194630559767,
+                "reql": "r.table('ratings').group('movieId', index='movieId').avg('rating').ungroup().order_by('reduction').limit(10000)"
+            }
+        ],
+        "join": [
+            {
+                "average_time_cost": 0.21044535939581693,
+                "total_time_cost": 1.0522267969790846,
+                "reql": "r.table('ratings').eq_join('movieId', r.table('movies'), index='movieId').zip().pluck('title', 'rating').limit(10000)"
+            },
+            {
+                "average_time_cost": 0.40140179959125816,
+                "total_time_cost": 2.007008997956291,
+                "reql": "r.table('genres').filter(lambda var_2: (r.row['genres'] == r.expr('Documentary'))).eq_join('movieId', r.table('ratings'), index='movieId').zip().limit(10000)"
+            },
+            {
+                "average_time_cost": 0.21086119438987225,
+                "total_time_cost": 1.0543059719493613,
+                "reql": "r.table('genres').filter(lambda var_3: (r.row['genres'] == r.expr('Documentary'))).eq_join('movieId', r.table('movies')).zip().eq_join('movieId', r.table('ratings'), index='movieId').zip().pluck('title', 'rating').limit(10000)"
+            }
+        ],
+        "aggregation": [
+            {
+                "average_time_cost": 0.0038803467992693185,
+                "total_time_cost": 0.019401733996346593,
+                "reql": "r.table('ratings').max(index='rating')"
+            },
+            {
+                "average_time_cost": 71.11813741561491,
+                "total_time_cost": 355.59068707807455,
+                "reql": "r.table('ratings').count('rating')"
+            },
+            {
+                "average_time_cost": 0.21440828640479595,
+                "total_time_cost": 1.0720414320239797,
+                "reql": "r.table('ratings').distinct(index='userId')"
+            },
+            {
+                "average_time_cost": 106.04665718760808,
+                "total_time_cost": 530.2332859380404,
+                "reql": "r.table('ratings').distinct(index='userId').count()"
+            }
+        ],
+        "subquery": [
+            {
+                "average_time_cost": 347.1919392780168,
+                "total_time_cost": 1735.959696390084,
+                "reql": "r.table('ratings').group('movieId', index='movieId').max('rating').ungroup().get_field('reduction').eq_join(lambda var_4: [var_4['rating'], var_4['movieId']], r.table('ratings'), index='rating_and_movieId').zip().pluck('userId', 'movieId', 'rating').limit(10000)"
+            }
+        ],
+        "group by": [
+            {
+                "average_time_cost": 194.82226375080646,
+                "total_time_cost": 974.1113187540323,
+                "reql": "r.table('ratings').group('userId', index='userId').max('rating')"
+            },
+            {
+                "average_time_cost": 0.4446567462058738,
+                "total_time_cost": 2.223283731029369,
+                "reql": "r.table('genres').group('movieId', index='movieId').count('genres')"
+            }
+        ]
+    },
+    "update_time_with_index": {
+        "insert": {
+            "average_time_cost": 0.003663055194495246,
+            "total_time_cost": 36.63055194495246
+        },
+        "update": {
+            "average_time_cost": 0.006163930696004536,
+            "total_time_cost": 61.63930696004536
+        },
+        "delete": {
+            "average_time_cost": 0.0055243913023034115,
+            "total_time_cost": 55.24391302303411
+        }
+    }
+}

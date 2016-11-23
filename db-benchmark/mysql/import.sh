@@ -46,7 +46,6 @@ mysqlimport \
     --password=${password} \
     ${db} \
     $movies_filename \
-    $genres_filename \
     $ratings_filename \
     $tages_filename
 
